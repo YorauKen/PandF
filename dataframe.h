@@ -31,12 +31,21 @@ class DataFrame{
 		typedef std::variant<vector<string>, vector<int>, vector<double>, vector<bool>> col_type;
 
 		template<typename T , typename... T1>
-		DataFrame(const Index& index , const vector<string>& col_headers , const vector<T>&,const vector<T1>&...);
+		DataFrame(const vector<string> row_names, const vector<string> col_headers , const vector<T>,const vector<T1>...);
 		
 		int find_column_position(const std::string& col_name);
 
 		void print_dataframe();
 		
+		template<typename T>
+		void append_column(const string col_name ,  vector<T> column );
+
+		template<typename T>
+		void append_column(const string col_name ,int pos, vector<T> column);
+	
+		template <typename T , typename... T1>
+		void append_columns(const vector<string> col_names ,int pos, vector<T> column , vector<T1>...);
+
 	
 	private:
 		Index ind;
@@ -56,6 +65,11 @@ class DataFrame{
 		void initialise_index(const string&);
 
 		void insert_data(ifstream& file ,const vector<string>&col , const string&);	
+
+		template <typename T , typename ...T1>
+		bool check_Index_Length(int , vector<T> , vector<T1>...);
+
+		
  
 };
 

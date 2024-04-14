@@ -1,5 +1,5 @@
 index,first_col,second_col,third_col,fourth_col
 string,double,string,bool,int
 first_row,10,,true,1
-second_row,,Australia,false,
+second_row,20,Australia,false,2
 third_row,30,Canada,true,3

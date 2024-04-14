@@ -17,7 +17,7 @@ class Index {
 		
 		template<typename T>
 		Index(vector<T> ind) : index_names(ind) {}
-
+		
 		Index() = default;
 
     private:
