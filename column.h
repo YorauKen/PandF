@@ -20,7 +20,20 @@ class Column {
     typedef std::variant<vector<string>, vector<int>, vector<double>, vector<bool>> col_type;
     friend class DataFrame;
     template <typename T>
-    Column(vector<T> data,const string& name) : column_data(data), column_name(name) {}
+    Column(vector<T> data,const string& name)  {
+      try
+      {
+        column_data=data;
+        column_name=name;
+      }
+      catch(const std::exception& e)
+      {
+        std::cerr << e.what() << '\n';
+      }
+      
+    }
+    template <typename T>
+    Column(vector<T> data) : column_data(data) { }
     size_t size();
     size_t size() const;
     template <typename T>
@@ -29,6 +42,7 @@ class Column {
   private:
     col_header_type column_name;
     col_type column_data;
+    // bool 
     
 
     

@@ -29,30 +29,33 @@ int DataFrame::find_column_position(const std::string& col_name){
 
 void DataFrame::print_dataframe(){
 	// cout << "I am before print stmt" << endl;
-	for (int i = 0; i < columns.size(); i++){
+	try
+	{
+	for (int i = 0; i < col_n; i++){
 		// cout << "I am in for loop print stmt" << endl;
 		col_type temp = columns[i].column_data;
 		if(std::holds_alternative<vector<int>>(temp))
-		{
-			for (int j = 0; j < std::get<vector<int>>(temp).size(); j++){
+		{	
+			for (int j = 0; j < row_n; j++){
 				cout << std::get<vector<int>>(temp)[j] << ' ' ;
+				
 			}
 			cout << endl;
 		} else if(std::holds_alternative<vector<double>>(temp)){
 			
-			for (int j = 0; j < std::get<vector<double>>(temp).size(); j++){
+			for (int j = 0; j < row_n; j++){
 				cout << (int)std::get<vector<double>>(temp)[j] << ' ' ;
 			}
 			cout << endl;
 		} else if(std::holds_alternative<vector<string>>(temp)){
 			
-			for (int j = 0; j < std::get<vector<string>>(temp).size(); j++){
+			for (int j = 0; j < row_n; j++){
 				cout << std::get<vector<string>>(temp)[j] << ' ' ;
 			}
 			cout << endl;
 		} else if(std::holds_alternative<vector<bool>>(temp)){
 			std::cout << std::boolalpha;
-			for (int j = 0; j < std::get<vector<bool>>(temp).size(); j++){
+			for (int j = 0; j < row_n; j++){
 				cout << std::get<vector<bool>>(temp)[j] << ' ' ;
 			}
 			cout << endl;
@@ -61,6 +64,13 @@ void DataFrame::print_dataframe(){
 	
 		}
 	}
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	
+	
 }
 
 

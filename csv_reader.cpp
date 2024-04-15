@@ -11,12 +11,13 @@ using std::istringstream;
 using std::string;
 using std::ifstream;
 
-vector<string> DataFrame::read_and_write_column_names(ifstream& file){
+vector<string> DataFrame::read_and_write_column_names(ifstream& file,bool row_names){
 	string line;
 	std::getline(file,line);
 	std::istringstream names(line);
 	string cell ;
-    std::getline(names,cell,',') ; 
+	if(row_names)
+	    std::getline(names,cell,',') ; 
 	while(std::getline(names,cell,',')){
 		if((std::find(column_names.begin(),column_names.end(),cell) == column_names.end()))
         	column_names.push_back(cell);
@@ -33,14 +34,7 @@ void DataFrame::initialise_column(const string& col_name){
 }
 
 void DataFrame::initialise_index(const string& type_name){
-	if(type_name == "int")
-		ind = Index(vector<int>());
-	else if (type_name == "string"){
-		ind = Index(vector<string>());
-	}
-	else {
-        throw std::runtime_error("Wrong index type: "+ type_name +" in:\n");
-    }
+	ind = Index(vector<string>());
 }
 
 
@@ -59,35 +53,81 @@ void DataFrame::initialise_column(const string& type,const string& col_name){
     }
 }
 
-string DataFrame::initialise_column(ifstream& file,vector<string> col_names){
+
+
+void DataFrame::initialise_column(string col_type)
+{
+	if (col_type == "double")
+        initialise_column<double>();
+    else if (col_type == "int")
+        initialise_column<int>();
+    else if (col_type == "string")
+        initialise_column<string>();
+    else if (col_type == "bool")
+        initialise_column<bool>();
+    else {
+        throw std::runtime_error("Wrong column type: " +col_type + " for: "+" in:\n");
+    }
+}
+
+void DataFrame::initialise_column(ifstream& file , bool row_nam){
 	string line;
 	std::getline(file,line);
 	std::istringstream type_names(line);
-    string index_type;
-	getline(type_names,index_type,','); // init index
-	initialise_index(index_type);
+	if(row_nam){
+		string index_type;
+		getline(type_names,index_type,','); // init index
+		if(index_type != "string"){
+			throw std::runtime_error("index type not equal to string");
+		}
+		initialise_index(index_type);
+	}
+	string cell;
+	int i =0;
+	while(std::getline(type_names,cell,','))
+	{	
+		initialise_column(cell);
+	}
+	
+}
+
+
+void DataFrame::initialise_column(ifstream& file,vector<string> col_names,bool row_nam ){
+	string line;
+	std::getline(file,line);
+	std::istringstream type_names(line);
+	if(row_nam){
+		string index_type;
+		getline(type_names,index_type,','); // init index
+		if(index_type != "string"){
+			throw std::runtime_error("index type not equal to string");
+		}
+		initialise_index(index_type);
+	}
+   
 	string cell;
 	int i =0;
 	while(std::getline(type_names,cell,','))
 	{	
 		initialise_column(cell,col_names[i++]);
 	}
-	return index_type;
 }
 
-void DataFrame::insert_data(std::ifstream& file, const vector<string>& cols,
-                            const std::string& index_type) {
+
+
+void DataFrame::insert_data(std::ifstream& file,bool row_nam ) {
     string line, value;
     while (std::getline(file, line)) {
         istringstream row(line);
-        std::getline(row, value, ',');
-        if (index_type == "int")
-            std::get<vector<int>>(ind.index_names).push_back(stoi(value));
-        else
-            std::get<vector<string>>(ind.index_names).push_back(value);
-        for (const string& col : cols) {
+		if(row_nam){
+        	std::getline(row, value, ',');
+      		ind.index_names.push_back(value);
+		}
+        
+		int n = columns.size();
+		for (int i = 0 ; i < n ; i++) {
             std::getline(row, value, ',');
-            columns[find_column_position(col)].convert_and_push_back(value);
+            columns[i].convert_and_push_back(value);
         }
 		if(row.str().empty())
 			std::runtime_error("Column/Row Overflow");
@@ -96,24 +136,45 @@ void DataFrame::insert_data(std::ifstream& file, const vector<string>& cols,
     }
 }
 
-DataFrame::DataFrame(string filename){
+DataFrame::DataFrame(string filename , bool row_nam = false ,bool col_nam = false){
     ifstream infile(filename);
-	
+	 // boolean
 	try{
-		//std::cout << "I have initialized column names 1"<<std::endl;
-    	vector<string> col_names = read_and_write_column_names(infile);
-		//std::cout << "I have initialized column names 2"<<std::endl;
-		string index_type = initialise_column(infile,col_names);
-		//std::cout << "I have initialized column names 3"<<std::endl;
-		insert_data(infile,col_names,index_type);
-		//std::cout << "I have initialized column names 4"<<std::endl;
-		
+		if(col_nam && row_nam){
+	    	vector<string> colu_names = read_and_write_column_names(infile,row_nam);
+			col_n = colu_names.size();
+			initialise_column(infile,colu_names,row_nam);
+			insert_data(infile,row_nam);
+			row_n = ind.index_names.size();
+		}
+		else if(col_nam && !row_nam){
+			vector<string> colu_names = read_and_write_column_names(infile,row_nam);
+			col_n = colu_names.size();
+			initialise_column(infile,colu_names,row_nam);
+			insert_data(infile,row_nam);
+			row_n = columns[0].size();
 
+		}
+		else if (!col_nam && row_nam){
+			initialise_column(infile,row_nam);
+			insert_data(infile,row_nam);
+			row_n = columns[0].size();
+			col_n = columns.size();
+		} 
+		else {
+			initialise_column(infile,row_nam);
+			insert_data(infile,row_nam);							
+			row_n = columns[0].size();
+			col_n = columns.size();
+		}
+		col_names = col_nam; // boolean
+		row_names = row_nam;
+		
+		
+	
 	} catch (const std::runtime_error &e) {
 		std::cerr << "Error: " << e.what() << std::endl;
 	}
-	
-	
 	
 }
 

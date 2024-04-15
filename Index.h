@@ -12,7 +12,7 @@ using std::vector;
 class Index {
 
 	public:
-        typedef std::variant<vector<string>,vector<int>> idx ;
+        
 		friend class DataFrame;
 		
 		template<typename T>
@@ -21,7 +21,7 @@ class Index {
 		Index() = default;
 
     private:
-		idx index_names;
+		vector<string> index_names; 
 };
 
 
