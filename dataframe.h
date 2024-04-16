@@ -74,7 +74,7 @@ class DataFrame{
 
 		vector<string> get_col_names();
 
-		auto get_column(int& i);
+		Column get_column(int i);
 
 		DataFrame operator+(DataFrame& rhs);
 
@@ -98,6 +98,7 @@ class DataFrame{
 			} catch( const std::exception& e) {
 				std::cerr << "Exception caught: "<< e.what() << std::endl;
 			}
+			return DataFrame();
 		}	
 		
 	private:
