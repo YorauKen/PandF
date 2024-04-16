@@ -172,3 +172,13 @@ DataFrame DataFrame::operator+(DataFrame &rhs){
 	}
 	
 }
+
+DataFrame DataFrame::operator[](string c){
+	DataFrame df = DataFrame();
+	
+	if (if_colname_exists(c)){
+		df.append_column(columns[find_column_position(c)],c);
+		df.row_n = this->row_n ;
+	}
+	return df;
+}

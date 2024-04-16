@@ -70,6 +70,8 @@ class DataFrame{
 
 		DataFrame operator[](vector<string>);
 
+		DataFrame operator[](string);
+
 		vector<string> get_col_names();
 
 		auto get_column(int& i);
@@ -248,10 +250,7 @@ template <typename T , typename... T1>
 void DataFrame::append_columns(const vector<string> col_names ,int pos, vector<T> column , vector<T1>... Next_Columns){
 	// std::cout << pos << std::endl ;
 	try{
-		if (col_names.size() == pos+1){
-			append_column(col_names[pos] , column);
-			return ;
-		}
+		
 		// std::cout << pos << std::endl;
 		append_column(col_names[pos] , column);
 		append_columns(col_names , pos +1 ,Next_Columns...);
