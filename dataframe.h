@@ -34,7 +34,7 @@ class DataFrame{
 
 	public:
 		    
-		DataFrame() = default;
+		DataFrame():row_n(0),col_n(0){};
 
 		DataFrame(string , bool  , bool );
 
@@ -68,6 +68,8 @@ class DataFrame{
 		template<typename T, typename... T1>
 		void append_columns(vector<T>col , vector<T1>... cols  );
 
+		DataFrame operator[](vector<string>);
+
 		vector<string> get_col_names();
 
 		auto get_column(int& i);
@@ -75,6 +77,8 @@ class DataFrame{
 		DataFrame operator+(DataFrame& rhs);
 
 		bool if_colname_exists(string);
+
+		void append_column(Column , string);
 				
 		template <typename T>
 		friend DataFrame operator+(DataFrame lhs, vector<T> rhs){
@@ -240,21 +244,6 @@ void DataFrame::append_columns(const vector<string> col_names ,int pos, vector<T
 	
 }
 
-// template <class T>
-// DataFrame operator+(DataFrame lhs, vector<T> rhs) {
-//     try{
-		
-// 		if(!lhs.col_names && rhs.size() == lhs.row_n ){
-// 			lhs.append_column(rhs)	;
-// 			return lhs ;
-// 		}
-// 		else{
-// 			throw std::runtime_error("Invalid no of rows matching/Dataframe doesnt have column name");
-// 		}
-// 	} catch( const std::exception& e) {
-// 		std::cerr << "Exception caught: "<< e.what() << std::endl;
-// 	}
-// }
 
 vector<string> DataFrame::get_col_names(){
 	return column_names;
@@ -346,7 +335,26 @@ bool DataFrame::if_colname_exists(string colu_name ){
 	return false;
 }
 
+DataFrame DataFrame::operator[](vector<string> list){
+	DataFrame df = DataFrame();
+	int k=0 ;
+	for (int i = 0; i < list.size(); i++){
+		
+		if(if_colname_exists(list[i])){
+			df.append_column(columns[find_column_position(list[i])],list[i]);
+		}
+		
+	}
+	df.row_n = this->row_n;
+	return df;
+	
+}
 
+void DataFrame::append_column(Column c,string name){
+	columns.push_back(c);
+	column_names.push_back(name);
+	col_n += 1 ;
+}
 
 
 
