@@ -182,3 +182,32 @@ DataFrame DataFrame::operator[](string c){
 	}
 	return df;
 }
+
+void DataFrame::sort_by_column_names(){
+	
+	auto comp = []<typename T>(T a , T b){
+		return a > b ;
+	};
+
+	int pos;
+	for(int i = 0 ; i < col_n ;i++){
+		pos = i ; 
+		for (int j = i; j < col_n; j++){
+			if(comp(column_names[pos],column_names[j]))
+				pos = j;
+		}
+
+		if(pos != i){
+			string temp = column_names[i];
+			Column Temp = columns[i];
+
+			columns[i] = columns[pos];
+			column_names[i] = column_names[pos];
+
+			columns[pos] = Temp ;
+			column_names[pos] = temp ;
+
+		}
+		
+	}
+}

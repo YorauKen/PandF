@@ -53,7 +53,7 @@ class DataFrame{
 
 		void print_dataframe();
 		
-		template<typename T>
+		template<is_eligible_Vector T>
 		void append_column(const string col_name ,  vector<T> column );
 
 		template<typename T>
@@ -81,6 +81,8 @@ class DataFrame{
 		bool if_colname_exists(string);
 
 		void append_column(Column , string);
+
+		void sort_by_column_names();
 				
 		template <typename T>
 		friend DataFrame operator+(DataFrame lhs, vector<T> rhs){
@@ -219,7 +221,7 @@ void DataFrame::initialise_column(){
     columns.push_back(a);
 }
 
-template<typename T>
+template<is_eligible_Vector T>
 void DataFrame::append_column(const string col_name ,  vector<T> column ){
 	
 	try {
