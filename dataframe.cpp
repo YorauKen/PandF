@@ -31,6 +31,7 @@ void DataFrame::print_dataframe(){
 	// cout << "I am before print stmt" << endl;
 	try
 	{
+	cout << "row size :" << row_n << " col size :"<< col_n << endl;
 	for (int i = 0; i < col_n; i++){
 		// cout << "I am in for loop print stmt" << endl;
 		col_type temp = columns[i].column_data;
@@ -110,34 +111,8 @@ vector<string> DataFrame::get_col_names(){
 }
 
 
-auto DataFrame::get_column(int& i) {
-	
-	// auto get_column_lambda = [=]<typename T>(){
-	//   	if(get_column_lambda<int>())
-	// 		return std::get<vector<int>>(columns[i].column_data);   
-	// 	else if(get_column_lambda<double>())
-	// 		return std::get<vector<double>>(columns[i].column_data); 
-	// 	else if(get_column_lambda<string>())
-	// 		return std::get<vector<string>>(columns[i].column_data); 
-	// 	else if(get_column_lambda<bool>())
-	// 		return std::get<vector<bool>>(columns[i].column_data);
-	// };
-	
-	// if(get_column_lambda<int>())
-	// 	return std::get<vector<int>>(columns[i].column_data);   
-	// else if(get_column_lambda<double>())
-	// 	return std::get<vector<double>>(columns[i].column_data); 
-	// else if(get_column_lambda<string>())
-	// 	return std::get<vector<string>>(columns[i].column_data); 
-	// else if(get_column_lambda<bool>())
-	// 	return std::get<vector<bool>>(columns[i].column_data); 
-	// else {
-	// 	std::cout << "I am lazy u please debug " << std::endl;
-	// 	throw std::runtime_error("invalid col type");
-	// }
-
-
-	
+Column DataFrame::get_column(int i) {
+	return columns[i];
 }
 
 
@@ -148,28 +123,33 @@ DataFrame DataFrame::operator+(DataFrame &rhs){
 	
 	try
 	{
-		// if((this->row_n == rhs.row_n)  && (this->col_names && rhs.row_names))
-		// {	
-		// 	vector<string> colu_namus = rhs.get_col_names();
-		// 	for(int i = 0 ; i < rhs.col_n ; i++){
-		// 		if(this->if_colname_exists(colu_namus[i])){
-		// 			this->append_column(colu_namus[i] , rhs.get_column(i));
-		// 		}
-		// 	}
-		// } else if ((this->row_n == rhs.row_n) && (!this->col_names && !rhs.row_names))
-		// {
-		// 	for(int i = 0 ; i < rhs.col_n ; i++){
-		// 		this->append_columns(rhs.get_column(i));
-		// 	}
-		// }
-		// else {
-		// 	throw std::runtime_error("dataframe size doesnt match or column headers are absent in either of the dataframe ");
-		// }
+		if((this->row_n == rhs.row_n)  && (this->col_names && rhs.row_names))
+		{	
+			vector<string> colu_namus = rhs.get_col_names();
+			for(int i = 0 ; i < rhs.col_n ; i++){
+				if(this->if_colname_exists(colu_namus[i])){
+					this->append_column(rhs.get_column(i) ,colu_namus[i] );
+				}
+			}
+
+		} else if ((this->row_n == rhs.row_n) && (!this->col_names && !rhs.row_names))
+		{
+			for(int i = 0 ; i < rhs.col_n ; i++){
+				this->columns.push_back(rhs.get_column(i));
+				this->col_n += 1;
+			}
+
+		}
+		else {
+			throw std::runtime_error("dataframe size doesnt match or column headers are absent in either of the dataframe ");
+		}
 	}
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << '\n';
 	}
+
+	return *this;
 	
 }
 
