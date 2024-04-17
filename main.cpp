@@ -21,7 +21,7 @@ int main(int argc, const char** argv) {
 			// df = df + a;
 			// df.print_dataframe();
 			// DataFrame df2(a,vector<int>{1,2,3},a);
-			df = df[string("3rd row")];
+			df.drop_row(2);
 			//df = df + df2;
 			df.print_dataframe();		
 

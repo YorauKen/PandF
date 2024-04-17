@@ -83,6 +83,16 @@ class DataFrame{
 		void append_column(Column , string);
 
 		void sort_by_column_names();
+
+		void drop_row(int);
+
+		void drop_row(string);
+
+		void drop_column(int );
+
+		
+		void drop_column(string );
+
 				
 		template <typename T>
 		friend DataFrame operator+(DataFrame lhs, vector<T> rhs){

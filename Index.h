@@ -20,6 +20,8 @@ class Index {
 		
 		Index() = default;
 
+		int get_index_position(string);
+
     private:
 		vector<string> index_names; 
 };

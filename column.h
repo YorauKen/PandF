@@ -19,6 +19,8 @@ class Column {
     typedef std::variant<string, int> col_header_type;
     typedef std::variant<vector<string>, vector<int>, vector<double>, vector<bool>> col_type;
     friend class DataFrame;
+
+    Column() = default;
     template <typename T>
     Column(vector<T> data,const string& name)  {
       try
@@ -38,6 +40,7 @@ class Column {
     size_t size() const;
     template <typename T>
     void push_back(const T);
+
   
   private:
     col_header_type column_name;

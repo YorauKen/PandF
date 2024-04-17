@@ -4,6 +4,7 @@
 #include<algorithm>
 #include<map>
 
+
 #include "Column.h"
 // #include "dataframe.h"
 
@@ -97,10 +98,13 @@ void DataFrame::append_column(Column c,string name){
 }
 
 bool DataFrame::if_colname_exists(string colu_name ){
-	for(int i = 0 ; i < col_n ; i++){
-		if(colu_name == column_names[i])
-			return true;
+	if (col_names){
+		for(int i = 0 ; i < col_n ; i++){
+			if(colu_name == column_names[i])
+				return true;
+		}
 	}
+	
 	return false;
 }
 
@@ -190,4 +194,117 @@ void DataFrame::sort_by_column_names(){
 		}
 		
 	}
+}
+
+void DataFrame::drop_column(int j){
+	try{
+
+		if(j < col_n){
+			for (int i = j; i < col_n - 1; i++){
+				column_names[i] = column_names[i+1];
+				columns[i] = columns[i+1];
+			}
+			
+			col_n -= 1;
+			column_names.resize(col_n);
+			columns.resize(col_n);
+		}else{
+			throw std::out_of_range("column index out of range");
+		}
+
+
+	}catch(const std::exception& e){
+		std::cerr << e.what() << '\n';
+	}
+	
+}
+
+		
+void DataFrame::drop_column(string c){
+	try{
+		if (if_colname_exists(c)){
+			int i = find_column_position(c);
+			drop_column(i);
+		}else{
+			throw std::out_of_range("Column name doesnt exist");
+		}
+		
+	}
+	catch(const std::exception& e){
+		std::cerr << e.what() << '\n';
+	}
+	
+}
+
+
+
+void DataFrame::drop_row(int k){
+	try{
+
+		if(k < row_n){
+			row_n -= 1;
+			for (int i = 0; i < col_n; i++){
+
+				
+				if(std::holds_alternative<vector<int>>(columns[i].column_data)){
+					
+					for (int j = k; j < row_n; j++){
+						std::get<vector<int>>(columns[i].column_data)[j] = std::get<vector<int>>(columns[i].column_data)[j+1];
+					}
+					std::get<vector<int>>(columns[i].column_data).resize(row_n);
+				}
+				else if (std::holds_alternative<vector<double>>(columns[i].column_data)){
+					for (int j = k; j < row_n; j++){
+						std::get<vector<double>>(columns[i].column_data)[j] = std::get<vector<double>>(columns[i].column_data)[j+1];
+					}
+					std::get<vector<double>>(columns[i].column_data).resize(row_n);
+				}
+				else if (std::holds_alternative<vector<bool>>(columns[i].column_data)){
+					for (int j = k; j < row_n; j++){
+						std::get<vector<bool>>(columns[i].column_data)[j] = std::get<vector<bool>>(columns[i].column_data)[j+1];
+					}
+					std::get<vector<bool>>(columns[i].column_data).resize(row_n);
+				}
+				else if (std::holds_alternative<vector<string>>(columns[i].column_data)){
+					for (int j = k; j < row_n ; j++){
+						std::get<vector<string>>(columns[i].column_data)[j] = std::get<vector<string>>(columns[i].column_data)[j+1];
+					}
+					std::get<vector<string>>(columns[i].column_data).resize(row_n);
+				}
+				
+			}
+
+			for (int i = k; i < row_n; i++){
+				ind.index_names[i] = ind.index_names[i+1];
+			}
+			
+			ind.index_names.resize(row_n);
+			
+		}else{
+			throw std::out_of_range("row index out of range");
+		}
+
+
+	}catch(const std::exception& e){
+		std::cerr << e.what() << '\n';
+	}
+}
+
+void DataFrame::drop_row(string j){
+	try{
+		if(row_names ){
+			int i = ind.get_index_position(j);
+			if(i != -1)
+				drop_row(i);
+			else
+				throw std::out_of_range("row names dint exist");
+		}else{
+			throw std::out_of_range("row names dont exist");
+		}
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	
 }
