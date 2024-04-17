@@ -308,3 +308,81 @@ void DataFrame::drop_row(string j){
 	}
 	
 }
+
+void DataFrame::set_rownames(vector<string> row_namus){
+	try{
+		if (row_namus.size() == row_n){
+			ind = Index(row_namus);
+			row_names = true ;
+		}
+		else{
+			throw std::invalid_argument("No of Rows don't match");
+		}
+		
+	}
+	catch(const std::exception& e){
+		std::cerr << e.what() << '\n';
+	}
+		
+}
+
+
+void DataFrame::replace_rowname(string old_name, string new_name){
+	try{
+		if (row_names ){
+			int i = ind.get_index_position(old_name);
+			if(i != -1)
+				ind.index_names[i] = new_name;
+			else
+				throw std::invalid_argument("row name doesn't exist");
+		}
+		else{
+			throw std::runtime_error("DataFrame doesnt have row names");
+		}
+	}
+	catch(const std::exception& e){
+		std::cerr << e.what() << '\n';
+	}
+	
+}
+
+
+void DataFrame::set_colnames(vector<string> col_namus){
+	try{
+		if (col_namus.size() == col_n){
+			column_names = col_namus;
+			col_names = true;
+			for (int i = 0; i < col_n; i++){
+				columns[i].column_name = col_namus[i] ;
+			}
+		}
+		else{
+			throw std::invalid_argument("Sizes dont match");
+		}
+		
+	}
+	catch(const std::exception& e){
+		std::cerr << e.what() << '\n';
+	}
+	
+}
+
+void DataFrame::replace_colname(string old_name,string new_name){
+	try{
+		if (col_names && if_colname_exists(old_name) ){
+			int i = find_column_position(old_name);
+			if(i < col_n){
+				column_names[i] = new_name;
+				columns[i].column_name = new_name ;
+			}
+			else throw std::runtime_error("What is error");
+		}
+		else{
+			throw std::invalid_argument("this operation cant be performed on this dataframe");
+		}
+	}
+	catch(const std::exception& e){
+		std::cerr << e.what() << '\n';
+	}
+		
+}

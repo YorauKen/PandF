@@ -16,7 +16,7 @@ class Column {
 
 
   public:
-    typedef std::variant<string, int> col_header_type;
+    
     typedef std::variant<vector<string>, vector<int>, vector<double>, vector<bool>> col_type;
     friend class DataFrame;
 
@@ -43,7 +43,7 @@ class Column {
 
   
   private:
-    col_header_type column_name;
+    string column_name;
     col_type column_data;
     // bool 
     

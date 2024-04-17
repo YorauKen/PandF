@@ -90,9 +90,15 @@ class DataFrame{
 
 		void drop_column(int );
 
-		
 		void drop_column(string );
 
+		void set_rownames(vector<string>);
+
+		void replace_rowname(string , string);
+
+		void set_colnames(vector<string>);
+
+		void replace_colname(string ,string);
 				
 		template <typename T>
 		friend DataFrame operator+(DataFrame lhs, vector<T> rhs){
