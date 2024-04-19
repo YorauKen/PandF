@@ -99,6 +99,10 @@ class DataFrame{
 		void set_colnames(vector<string>);
 
 		void replace_colname(string ,string);
+
+		void mean();
+
+		void mean(string col_name);
 				
 		template <typename T>
 		friend DataFrame operator+(DataFrame lhs, vector<T> rhs){

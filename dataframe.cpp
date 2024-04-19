@@ -1,6 +1,7 @@
 #include<fstream>
 #include<iostream>
 #include<vector>
+#include <variant>
 #include<algorithm>
 #include<map>
 
@@ -385,4 +386,39 @@ void DataFrame::replace_colname(string old_name,string new_name){
 		std::cerr << e.what() << '\n';
 	}
 		
+}
+
+
+// void DataFrame::mean(){
+// 	// check for the columns with the type int or double
+// 	for (const Column& col : columns) {
+//         std::visit([this](const auto& vec) {
+//             using T = typename std::decay_t<decltype(vec)>::value_type;
+//             if (std::is_same_v<T, int>) {
+//                 double sum = 0.0;
+//                 size_t count = 0;
+//                 for (const auto& value : vec) {
+//                     sum += value;
+//                     count++;
+//                 }
+//                 double mean = sum / count;
+//                 std::cout <<"Column"<<col.colum_name<<" mean (int): " << mean << std::endl;
+//             } else if (std::is_same_v<T, double>) {
+//                 double sum = 0.0;
+//                 size_t count = 0;
+//                 for (const auto& value : vec) {
+//                     sum += value;
+//                     count++;
+//                 }
+//                 double mean = sum / count;
+//                 std::cout << "Column mean (double): " << mean << std::endl;
+//             } else {
+//                 std::cout << "Column data type is not numeric." << std::endl;
+//             }
+//         }, col.column_data);
+//     }
+// }
+
+void DataFrame::mean(string col_name){
+
 }

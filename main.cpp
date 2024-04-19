@@ -21,9 +21,12 @@ int main(int argc, const char** argv) {
 			// df = df + a;
 			// df.print_dataframe();
 			// DataFrame df2(a,vector<int>{1,2,3},a);
-			df.drop_row(2);
+			// df.drop_row(2);
 			//df = df + df2;
 			df.print_dataframe();		
+
+			//df.mean();  // MEAN OF possible column names
+			// df.mean("row_name");
 
 	}
 	catch(const std::exception& e)
