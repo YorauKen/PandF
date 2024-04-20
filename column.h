@@ -40,8 +40,9 @@ class Column {
     size_t size() const;
     template <typename T>
     void push_back(const T);
-
+   
   
+
   private:
     string column_name;
     col_type column_data;
@@ -54,7 +55,6 @@ class Column {
     
     void push_nan();
 };
-
 
 
 #endif

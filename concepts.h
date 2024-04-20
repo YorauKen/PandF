@@ -18,7 +18,8 @@ class DataFrame;
 template <typename T>
 concept is_eligible_Vector = std::is_same_v<vector<int>,vector<T>> || std::is_same_v<vector<double>,vector<T>> ||std::is_same_v<vector<string>,vector<T>> ||std::is_same_v<vector<bool>,vector<T>>;
 
-
+template <typename T>
+concept is_Int = std::is_same_v<int,T>;
 
 template <typename T>
 concept is_DataFrame = std::is_same_v<DataFrame , T> ;

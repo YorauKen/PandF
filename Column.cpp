@@ -81,5 +81,7 @@ void Column::convert_and_push_back(string value){
     std::cerr << "Error: " << e.what() << std::endl;
   }
   
-
 }
+
+
+

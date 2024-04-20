@@ -3,14 +3,12 @@
 #include<vector>
 #include <variant>
 #include<algorithm>
-#include<map>
 
 
-#include "Column.h"
+#include "column.h"
 // #include "dataframe.h"
 
 using std::vector;
-using std::map;
 using std::cout;
 using std::endl;
 using std::ifstream;
@@ -389,36 +387,134 @@ void DataFrame::replace_colname(string old_name,string new_name){
 }
 
 
-// void DataFrame::mean(){
-// 	// check for the columns with the type int or double
-// 	for (const Column& col : columns) {
-//         std::visit([this](const auto& vec) {
-//             using T = typename std::decay_t<decltype(vec)>::value_type;
-//             if (std::is_same_v<T, int>) {
-//                 double sum = 0.0;
-//                 size_t count = 0;
-//                 for (const auto& value : vec) {
-//                     sum += value;
-//                     count++;
-//                 }
-//                 double mean = sum / count;
-//                 std::cout <<"Column"<<col.colum_name<<" mean (int): " << mean << std::endl;
-//             } else if (std::is_same_v<T, double>) {
-//                 double sum = 0.0;
-//                 size_t count = 0;
-//                 for (const auto& value : vec) {
-//                     sum += value;
-//                     count++;
-//                 }
-//                 double mean = sum / count;
-//                 std::cout << "Column mean (double): " << mean << std::endl;
-//             } else {
-//                 std::cout << "Column data type is not numeric." << std::endl;
-//             }
-//         }, col.column_data);
-//     }
-// }
+void DataFrame::mean(){
+	try
+	{
+		for(int i = 0 ; i < col_n ; i++)
+		{
+			mean(column_names[i]);
+		}
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	
+}
+
+/*template <typename T>
+void DataFrame::countFrequency(Column<T>vec ,T& mode , int& maxF )
+{	
+	int spl_count = 0;
+	for(int i = 0 ; i < vec.size() ; i++)
+	{	
+		spl_count = vec[i].
+	}
+}*/
+
+
+
+
+
+template <typename T>
+double calculate_mean(const vector<T> vec){
+	try
+	{	
+		if(std::is_same_v<T,int>){
+			double sum = 0;
+			int n = vec.size();
+			for(int i = 0 ; i < n ; i++)
+			{
+				sum += (double)(vec[i]);
+			}
+			sum = sum / n;
+			return sum;
+		} else {
+			throw std::invalid_argument("column is not Numeric type");
+		}
+		
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	
+}
+
+template <>
+double calculate_mean(vector<double> vec){
+	int n = vec.size();
+	int no_of_values = n;
+	double sum = 0;
+	for(int i = 0 ; i < n ; i++)
+	{	if(std::isnan(vec[i])) {
+			no_of_values--;
+			continue;
+		}
+		sum += (vec[i]);
+	}
+	sum = sum / no_of_values ;
+	return sum;
+}
 
 void DataFrame::mean(string col_name){
+	try
+	{
+		int i = find_column_position(col_name); // To do =  check if column exists or not
+		if(std::holds_alternative<vector<int>>(columns[i].column_data)){
+			double mean_value = calculate_mean(std::get<vector<int>>(columns[i].column_data));
+			cout << "mean of column "<<col_name<<" = "<<mean_value<<endl;  
+		} else if (std::holds_alternative<vector<double>>(columns[i].column_data))
+		{
+			double mean_value = calculate_mean(std::get<vector<double>>(columns[i].column_data));
+			cout << "mean of column "<<col_name<<" = "<<mean_value<<endl;  
+		}
+		else {
+			throw std::invalid_argument("col is not double");
+		}
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+}
+
+void DataFrame::mode(){
 
 }
+
+void DataFrame::mode(string col_name){
+	// try
+	// {
+	// 	int i = find_column_position(col_name);
+	// 	if(std::holds_alternative<vector<int>>(columns[i].column_data)){
+			
+	// 		int mode_value = columns[i].mode<int>();
+	// 		cout << "mode of column "<<col_name<<" = "<<mode_value<<endl; 
+
+	// 	} else if(std::holds_alternative<vector<double>>(columns[i].column_data)){
+			
+	// 		double mode_value = columns[i].mode<double>();
+	// 		cout << "mode of column "<<col_name<<" = "<<mode_value<<endl; 
+
+	// 	} else if(std::holds_alternative<vector<string>>(columns[i].column_data)){
+			
+	// 		string mode_value = columns[i].mode<string>();
+	// 		cout << "mode of column "<<col_name<<" = "<<mode_value<<endl;
+
+	// 	} else if(std::holds_alternative<vector<bool>>(columns[i].column_data)){
+	// 		bool mode_value = columns[i].mode<bool>();
+	// 		cout << "mode of column "<<col_name<<" = "<<mode_value<<endl;
+
+	// 	} else {
+	// 		throw std::invalid_argument("Invalid type From mode(string function) ");
+	// 	}
+
+	// }
+	// catch(const std::exception& e)
+	// {
+	// 	std::cerr << e.what() << '\n';
+	// }
+	
+}
+
