@@ -3,8 +3,8 @@
 #include <fstream>
 #include <algorithm>
 #include <vector>
-#include "dataframe.h"
-#include "Column.h"
+#include "dataframe.hpp"
+#include "column.hpp"
 
 using std::vector;
 using std::istringstream;

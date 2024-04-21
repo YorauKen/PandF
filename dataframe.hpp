@@ -11,19 +11,24 @@
 #include <concepts>
 #include <type_traits>
 
-#include "Column.h"
-#include "Index.h"
-#include "concepts.h"
+#include "column.hpp"
+#include "Index.hpp"
+#include "concepts.hpp"
 
 
 using std::vector;
 using std::cout;
 using std::endl;
 using std::ifstream;
+using std::is_same_v;
 
+// template<typename T>
+// int calculate_count(vector<T> , T val);
 
 template<typename T>
-int calculate_count(vector<T> , T val);
+int count_string(vector<string> temp,T a){
+	return std::count(temp.begin(),temp.end(),a);
+}
 
 class Column;
 class Index;
@@ -161,6 +166,7 @@ class DataFrame{
 		 * 
 		 * @param i 
 		 * @return Column 
+		 * 
 		 */
 		Column get_column(int i);
 
@@ -215,6 +221,16 @@ class DataFrame{
 
 		void mean(string col_name);
 
+		template<typename T>
+		int count(string col_ind ,T val );
+
+
+		template<typename T >
+		int count(int col_ind ,T val );
+
+		int count(int col_ind , string val);
+
+		
 
 		void mode();
 
@@ -269,7 +285,9 @@ class DataFrame{
 		template <typename T , typename ...T1>
 		bool check_Index_Length(int , vector<T> , vector<T1>...);
 		
- 
+		col_type get_column_data(int i);
+
+		
 };
 
 
@@ -395,6 +413,60 @@ void DataFrame::append_columns(const vector<string> col_names ,int pos, vector<T
 		std::cerr << "Exception caught: "<< e.what() << std::endl;
 	}
 	
+}
+
+template<typename T>
+int DataFrame::count(string col_ind ,T val ){
+	try{
+			if (if_colname_exists(col_ind)){
+ 				return count(find_column_position(col_ind),val);
+ 			}
+ 			else{
+ 				throw std::invalid_argument("column name doesnt exist");
+ 			}
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	return -1;
+}
+
+
+
+
+
+template<typename T >
+int DataFrame::count(int col_ind ,T val ){
+	try{
+			if (col_ind < col_n)
+			{	std::cout <<"dsnkj" << std::endl;
+				if(std::holds_alternative<vector<int>>(columns[col_ind].column_data) ){
+				vector<int> temp(std::get<vector<int>>(columns[col_ind].column_data));
+				return std::count(temp.begin(),temp.end(),val);
+				}
+				else if(std::holds_alternative<vector<double>>(columns[col_ind].column_data)){
+					vector<double> temp(std::get<vector<double>>(columns[col_ind].column_data));
+					std::cout << "Hello"<< std::endl ;
+					return std::count(temp.begin(),temp.end(),val);
+				}
+				else if(std::holds_alternative<vector<bool>>(columns[col_ind].column_data)){
+					vector<bool> temp(std::get<vector<bool>>(columns[col_ind].column_data));
+					return std::count(temp.begin(),temp.end(),val);
+				}
+				else{
+					throw std::invalid_argument("column type and value type dont match");
+				}
+			}
+			else{
+				throw std::invalid_argument("index out of range");
+			}
+			
+	}
+	catch(const std::exception& e){
+		std::cerr << e.what() << '\n';
+	}
+	return -1;
 }
 
 

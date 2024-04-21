@@ -5,14 +5,16 @@
 #include<algorithm>
 
 
-#include "column.h"
-// #include "dataframe.h"
+
+#include "column.hpp"
+#include "dataframe.hpp"
 
 using std::vector;
 using std::cout;
 using std::endl;
 using std::ifstream;
 
+typedef std::variant<vector<string>, vector<int>, vector<double>, vector<bool>> col_type;
 
 int DataFrame::find_column_position(const std::string& col_name){
 
@@ -479,42 +481,31 @@ void DataFrame::mean(string col_name){
 	}
 }
 
-void DataFrame::mode(){
-
+int DataFrame::count(int col_ind , string val){
+	try{
+			if (col_ind < col_n)
+			{
+				if(std::holds_alternative<vector<string>>(get_column_data(col_ind))){
+					vector<string> temp(std::get<vector<string>>(get_column_data(col_ind)));
+					return count_string(temp,std::string(val));
+				}
+				else{
+					throw std::invalid_argument("column type and value type dont match");
+				}
+			}
+			else{
+				throw std::invalid_argument("index out of range");
+			}		
+	}
+	catch(const std::exception& e){
+		std::cerr << e.what() << '\n';
+	}
+	return -1;
 }
 
-void DataFrame::mode(string col_name){
-	// try
-	// {
-	// 	int i = find_column_position(col_name);
-	// 	if(std::holds_alternative<vector<int>>(columns[i].column_data)){
-			
-	// 		int mode_value = columns[i].mode<int>();
-	// 		cout << "mode of column "<<col_name<<" = "<<mode_value<<endl; 
-
-	// 	} else if(std::holds_alternative<vector<double>>(columns[i].column_data)){
-			
-	// 		double mode_value = columns[i].mode<double>();
-	// 		cout << "mode of column "<<col_name<<" = "<<mode_value<<endl; 
-
-	// 	} else if(std::holds_alternative<vector<string>>(columns[i].column_data)){
-			
-	// 		string mode_value = columns[i].mode<string>();
-	// 		cout << "mode of column "<<col_name<<" = "<<mode_value<<endl;
-
-	// 	} else if(std::holds_alternative<vector<bool>>(columns[i].column_data)){
-	// 		bool mode_value = columns[i].mode<bool>();
-	// 		cout << "mode of column "<<col_name<<" = "<<mode_value<<endl;
-
-	// 	} else {
-	// 		throw std::invalid_argument("Invalid type From mode(string function) ");
-	// 	}
-
-	// }
-	// catch(const std::exception& e)
-	// {
-	// 	std::cerr << e.what() << '\n';
-	// }
-	
+col_type DataFrame::get_column_data(int i){
+			return columns[i].get_column();
 }
+
+
 

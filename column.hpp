@@ -5,7 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include "dataframe.h"
+#include "dataframe.hpp"
 
 using std::string;
 using std::vector;
@@ -41,7 +41,9 @@ class Column {
     template <typename T>
     void push_back(const T);
    
-  
+    col_type get_column(){
+      return column_data;
+    }
 
   private:
     string column_name;

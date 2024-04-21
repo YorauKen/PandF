@@ -4,8 +4,8 @@
 #include <iostream>
 #include <string>
 
-#include "dataframe.h"
-#include "column.h"
+#include "dataframe.hpp"
+#include "column.hpp"
 
 using std::string;
 using std::vector;
