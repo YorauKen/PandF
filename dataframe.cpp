@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <variant>
+#include <string>
 #include <algorithm>
 
 #include "column.hpp"
@@ -29,10 +30,17 @@ int DataFrame::find_column_position(const std::string &col_name)
 	}
 }
 
+string::size_type width(vector<string>& inp) {
+    string::size_type maxlen = 0;
+    for (const auto& s : inp) maxlen = std::max(maxlen, s.size());
+    return maxlen;
+}
+
 void DataFrame::print_dataframe()
-{
+{	
+	cout << "\n";
 	// cout << "I am before print stmt" << endl;
-	try
+	/*try
 	{
 		cout << "row size :" << row_n << " col size :" << col_n << endl;
 		for (int i = 0; i < col_n; i++)
@@ -83,7 +91,81 @@ void DataFrame::print_dataframe()
 	catch (const std::exception &e)
 	{
 		std::cerr << e.what() << '\n';
+	}*/
+	vector<string> Oggy(row_n+1);
+	if(row_names){
+		Oggy[0] = "";
+		for(int i = 0 ; i<row_n ; i++)
+		{
+			Oggy[i+1] = ind.index_names[i];
+		}
+	} else{
+		Oggy[0] = "";
+		for(int i = 0 ; i<row_n ; i++)
+		{
+			Oggy[i+1] = std::to_string(i);
+		}
 	}
+	string::size_type maxlen = width(Oggy);
+	for(int i = 0 ; i <= row_n ; i++){
+		Oggy[i] += string(maxlen - Oggy[i].size(), ' ');
+	}
+	
+	for(int i = 0 ; i < col_n ; i++)
+	{	
+		vector<string> temp(row_n+1);
+		if(col_names)
+			temp[0] = column_names[i];
+		else temp[0] = std::to_string(i);
+		if (std::holds_alternative<vector<int>>(columns[i].column_data))
+		{	
+			vector<int> temp_col = std::get<vector<int>>(columns[i].column_data);
+			for (int j = 0; j < row_n; j++)
+			{
+				temp[j+1] = std::to_string(temp_col[j]);
+			}
+		} else if (std::holds_alternative<vector<string>>(columns[i].column_data)){	
+			vector<string> temp_col = std::get<vector<string>>(columns[i].column_data);
+			for (int j = 0; j < row_n; j++)
+			{
+				temp[j+1] = temp_col[j];
+			}
+		} else if (std::holds_alternative<vector<bool>>(columns[i].column_data)){	
+			vector<bool> temp_col = std::get<vector<bool>>(columns[i].column_data);
+			for (int j = 0; j < row_n; j++)
+			{	if(temp_col[j]) 
+					temp[j+1] = "true";
+				else
+					temp[j+1] = "false";
+			}
+		} else if (std::holds_alternative<vector<double>>(columns[i].column_data)){	
+			vector<double> temp_col = std::get<vector<double>>(columns[i].column_data);
+			for (int j = 0; j < row_n; j++)
+			{
+				temp[j+1] = std::to_string(temp_col[j]);
+			}
+		} else {
+			// do nothing
+		}
+		string::size_type maxlen = width(temp);
+		for(int i = 0 ; i <= row_n ; i++){
+			temp[i] += string(maxlen - temp[i].size(), ' ');
+		}
+		for(int i = 0 ; i <= row_n ; i++){
+			Oggy[i] += "  " + temp[i];
+		}
+	}
+	
+	// print the dataframe
+	for(int i = 0 ; i <= row_n ; i++){
+		cout << Oggy[i] << endl;
+	}
+
+	cout << "\n";
+	cout << "row size :" << row_n << " col size :" << col_n << endl;
+	cout << endl;
+
+
 }
 
 DataFrame DataFrame::operator[](vector<string> list)

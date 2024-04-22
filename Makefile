@@ -1,6 +1,6 @@
 # Compiler
 CXX = g++
-CXXFLAGS = -std=c++20 
+CXXFLAGS = -std=c++20 -Wall  -w
 
 # Source files
 SOURCES = main.cpp csv_reader.cpp dataframe.cpp Column.cpp Index.cpp
