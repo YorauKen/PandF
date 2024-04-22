@@ -230,11 +230,11 @@ class DataFrame{
 
 		int count(int col_ind , string val);
 
-		
-
 		void mode();
 
 		void mode(string col_name);
+
+		void mode(int col_pos);
 				
 		template <typename T>
 		friend DataFrame operator+(DataFrame lhs, vector<T> rhs){
@@ -281,7 +281,7 @@ class DataFrame{
 
 		template<typename T>
 		void initialise_column(); // without column name
-
+		
 		template <typename T , typename ...T1>
 		bool check_Index_Length(int , vector<T> , vector<T1>...);
 		
@@ -440,14 +440,14 @@ template<typename T >
 int DataFrame::count(int col_ind ,T val ){
 	try{
 			if (col_ind < col_n)
-			{	std::cout <<"dsnkj" << std::endl;
+			{	
 				if(std::holds_alternative<vector<int>>(columns[col_ind].column_data) ){
 				vector<int> temp(std::get<vector<int>>(columns[col_ind].column_data));
 				return std::count(temp.begin(),temp.end(),val);
 				}
 				else if(std::holds_alternative<vector<double>>(columns[col_ind].column_data)){
 					vector<double> temp(std::get<vector<double>>(columns[col_ind].column_data));
-					std::cout << "Hello"<< std::endl ;
+					
 					return std::count(temp.begin(),temp.end(),val);
 				}
 				else if(std::holds_alternative<vector<bool>>(columns[col_ind].column_data)){
