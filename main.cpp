@@ -11,12 +11,17 @@ int main(int argc, const char** argv) {
 	try
 	{		vector<int> a = {1,2,3};
 			DataFrame df(vector<string>{string("first row"),string("second row"),string("third row")},vector<string>{string("first col"),string("second col"),string("third col"),string("fourth Column")},vector<int>{1,3,3},vector<double>{1,1,3},vector<string>{string("first row"),string("second row"),string("second row")},vector<bool>{true,false,true});
-			df.print_dataframe();
+			// df.print_dataframe();
 			
 			// df = operator+(df,a) ;
 			DataFrame df2("ex.csv",false,false);
 			df2.print_dataframe();
-			
+			// df2.set_colnames(vector<string>{"10","20","30","40"});
+			// df2.set_rownames(vector<string>{"10","20","30","40"});
+			// df2.print_dataframe();
+			// df.print_dataframe();
+			// df.replace_colname("5","second_col");
+			// df.print_dataframe();
 			// DataFrame df(a,vector<int>{1,2,3},a,vector<int>{1,2,3});
 			// df.print_dataframe();
 			// df = df + a;

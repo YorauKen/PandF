@@ -1,0 +1,4 @@
+int,bool,int,double
+30,true,1,1000
+28,false,2,2000
+26,true,3,3000

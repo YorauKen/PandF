@@ -42,7 +42,7 @@ class DataFrame{
 		DataFrame():row_n(0),col_n(0),columns(vector<Column>{}){};
 
 		/**
-		 * @brief Construct a new Data Frame object without column names
+		 * @brief Construct a new Data Frame from csv file 
 		 * 
 		 */
 		DataFrame(string , bool  , bool );
@@ -91,56 +91,6 @@ class DataFrame{
 
 		void print_dataframe();
 		
-		/**
-		 * @brief This function appends the column with column name and column vector
-		 * 
-		 * @tparam T 
-		 * @param col_name column name 
-		 * @param column  column vector
-		 */
-		template<is_eligible_Vector T>
-		void append_column(const string col_name ,  vector<T> column );
-
-		/**
-		 * @brief This function appends the column with certain position , column name and column vector , used as intermediate 
-		 *  or base function in append columns variadic template condition
-		 * 
-		 * @tparam T 
-		 * @param col_name column name 
-		 * @param pos 	   position
-		 * @param column column vector
-		 */
-		template<typename T>
-		void append_columns(const vector<string> col_name ,int pos, vector<T> column);
-		/**
-		 * @brief This function appends the columns with their column names recursively incrementing the position , variadic approach is followed here
-		 * 
-		 * @tparam  
-		 * @tparam T1 
-		 * @param col_names 
-		 * @param pos 
-		 * @param column 
-		 */
-		template <typename T , typename... T1>
-		void append_columns(const vector<string> col_names ,int pos, vector<T> column , vector<T1>...);
-		/**
-		 * @brief This function acts as base function for appending columns for dataframe without the column headers
-		 * 
-		 * @tparam T 
-		 */
-		template<typename T>
-		void append_columns(vector<T>);
-		/**
-		 * @brief This function is used for appending columns for dataframe without the column headers, variadic method is used 
-		 * to append columns here
-		 * 
-		 * @tparam T 
-		 * @tparam T1 
-		 * @param cols 
-		 */
-		template<typename T, typename... T1>
-		void append_columns(vector<T>col , vector<T1>... cols  );
-
 		/**
 		 * @brief returns a respective columns by taking column names and returns as dataframe object
 		 * 
@@ -239,7 +189,6 @@ class DataFrame{
 		template <typename T>
 		friend DataFrame operator+(DataFrame lhs, vector<T> rhs){
     		try{
-		
 				if(!lhs.col_names && rhs.size() == lhs.row_n ){
 					lhs.append_columns(rhs);
 					return lhs ;
@@ -281,6 +230,56 @@ class DataFrame{
 
 		template<typename T>
 		void initialise_column(); // without column name
+
+		/**
+		 * @brief This function appends the column with column name and column vector
+		 * 
+		 * @tparam T 
+		 * @param col_name column name 
+		 * @param column  column vector
+		 */
+		template<is_eligible_Vector T>
+		void append_column(const string col_name ,  vector<T> column );
+
+		/**
+		 * @brief This function appends the column with certain position , column name and column vector , used as intermediate 
+		 *  or base function in append columns variadic template condition
+		 * 
+		 * @tparam T 
+		 * @param col_name column name 
+		 * @param pos 	   position
+		 * @param column column vector
+		 */
+		template<typename T>
+		void append_columns(const vector<string> col_name ,int pos, vector<T> column);
+		/**
+		 * @brief This function appends the columns with their column names recursively incrementing the position , variadic approach is followed here
+		 * 
+		 * @tparam  
+		 * @tparam T1 
+		 * @param col_names 
+		 * @param pos 
+		 * @param column 
+		 */
+		template <typename T , typename... T1>
+		void append_columns(const vector<string> col_names ,int pos, vector<T> column , vector<T1>...);
+		/**
+		 * @brief This function acts as base function for appending columns for dataframe without the column headers
+		 * 
+		 * @tparam T 
+		 */
+		template<typename T>
+		void append_columns(vector<T>);
+		/**
+		 * @brief This function is used for appending columns for dataframe without the column headers, variadic method is used 
+		 * to append columns here
+		 * 
+		 * @tparam T 
+		 * @tparam T1 
+		 * @param cols 
+		 */
+		template<typename T, typename... T1>
+		void append_columns(vector<T>col , vector<T1>... cols  );
 		
 		template <typename T , typename ...T1>
 		bool check_Index_Length(int , vector<T> , vector<T1>...);
@@ -294,7 +293,7 @@ class DataFrame{
 
 template<typename T>
 void DataFrame::append_columns(vector<T>col ){
-	columns.push_back(Column(col));
+ 	columns.push_back(Column(col));
 	col_n += 1 ;
 }
 
@@ -361,7 +360,7 @@ DataFrame::DataFrame(const vector<string> row_namus , const vector<string> col_h
 		}
 	}
 	else{
-		throw std::runtime_error("unequal column size");	
+		throw std::runtime_error("unequal row size");	
 	}
 }
 

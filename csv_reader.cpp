@@ -136,42 +136,59 @@ void DataFrame::insert_data(std::ifstream& file,bool row_nam ) {
     }
 }
 
+bool isCSV(const string & filename){
+	
+	size_t dotPosition = filename.find_last_of(".");
+    if(dotPosition == std::string::npos) {
+        // No dot found, so it can't be a CSV file
+        return false;
+    }
+	string extension = filename.substr(dotPosition + 1);
+	transform(extension.begin(), extension.end(), extension.begin(), [](unsigned char c) {
+        return std::tolower(c);
+    });
+	return (extension == "csv");
+}
+
 DataFrame::DataFrame(string filename , bool row_nam = false ,bool col_nam = false){
-    ifstream infile(filename);
+	
 	 // boolean
 	try{
-		if(col_nam && row_nam){
-	    	vector<string> colu_names = read_and_write_column_names(infile,row_nam);
-			col_n = colu_names.size();
-			initialise_column(infile,colu_names,row_nam);
-			insert_data(infile,row_nam);
-			row_n = ind.index_names.size();
-		}
-		else if(col_nam && !row_nam){
-			vector<string> colu_names = read_and_write_column_names(infile,row_nam);
-			col_n = colu_names.size();
-			initialise_column(infile,colu_names,row_nam);
-			insert_data(infile,row_nam);
-			row_n = columns[0].size();
+		if(isCSV(filename))
+		{
+			ifstream infile(filename);
+			if(col_nam && row_nam){
+				vector<string> colu_names = read_and_write_column_names(infile,row_nam);
+				col_n = colu_names.size();
+				initialise_column(infile,colu_names,row_nam);
+				insert_data(infile,row_nam);
+				row_n = ind.index_names.size();
+			}
+			else if(col_nam && !row_nam){
+				vector<string> colu_names = read_and_write_column_names(infile,row_nam);
+				col_n = colu_names.size();
+				initialise_column(infile,colu_names,row_nam);
+				insert_data(infile,row_nam);
+				row_n = columns[0].size();
 
+			}
+			else if (!col_nam && row_nam){
+				initialise_column(infile,row_nam);
+				insert_data(infile,row_nam);
+				row_n = columns[0].size();
+				col_n = columns.size();
+			} 
+			else {
+				initialise_column(infile,row_nam);
+				insert_data(infile,row_nam);							
+				row_n = columns[0].size();
+				col_n = columns.size();
+			}
+			col_names = col_nam; // boolean
+			row_names = row_nam;
+		} else {
+			throw std::invalid_argument("file isn't csv");
 		}
-		else if (!col_nam && row_nam){
-			initialise_column(infile,row_nam);
-			insert_data(infile,row_nam);
-			row_n = columns[0].size();
-			col_n = columns.size();
-		} 
-		else {
-			initialise_column(infile,row_nam);
-			insert_data(infile,row_nam);							
-			row_n = columns[0].size();
-			col_n = columns.size();
-		}
-		col_names = col_nam; // boolean
-		row_names = row_nam;
-		
-		
-	
 	} catch (const std::runtime_error &e) {
 		std::cerr << "Error: " << e.what() << std::endl;
 	}

@@ -220,18 +220,20 @@ DataFrame DataFrame::operator+(DataFrame &rhs)
 
 	try
 	{
-		if ((this->row_n == rhs.row_n) && (this->col_names && rhs.row_names))
+		if ((this->row_n == rhs.row_n) && (this->col_names && rhs.col_names))
 		{
 			vector<string> colu_namus = rhs.get_col_names();
 			for (int i = 0; i < rhs.col_n; i++)
 			{
-				if (this->if_colname_exists(colu_namus[i]))
+				if (!this->if_colname_exists(colu_namus[i]))
 				{
 					this->append_column(rhs.get_column(i), colu_namus[i]);
+				}else {
+					throw std::invalid_argument("duplicate column names found from operator+");
 				}
 			}
 		}
-		else if ((this->row_n == rhs.row_n) && (!this->col_names && !rhs.row_names))
+		else if ((this->row_n == rhs.row_n) && (!this->col_names && !rhs.col_names))
 		{
 			for (int i = 0; i < rhs.col_n; i++)
 			{
@@ -302,15 +304,23 @@ void DataFrame::drop_column(int j)
 	{
 
 		if (j < col_n)
-		{
-			for (int i = j; i < col_n - 1; i++)
-			{
-				column_names[i] = column_names[i + 1];
-				columns[i] = columns[i + 1];
+		{	
+			if(col_names){
+				for (int i = j; i < col_n - 1; i++)
+				{
+					column_names[i] = column_names[i + 1];
+					columns[i] = columns[i + 1];
+				}
+				column_names.resize(col_n);
+			} else {
+				for (int i = j; i < col_n - 1; i++)
+				{
+					
+					columns[i] = columns[i + 1];
+				}
 			}
-
+				
 			col_n -= 1;
-			column_names.resize(col_n);
 			columns.resize(col_n);
 		}
 		else
@@ -345,16 +355,16 @@ void DataFrame::drop_column(string c)
 }
 
 void DataFrame::drop_row(int k)
-{
+{	
 	try
 	{
-
+		
 		if (k < row_n)
 		{
 			row_n -= 1;
 			for (int i = 0; i < col_n; i++)
 			{
-
+				
 				if (std::holds_alternative<vector<int>>(columns[i].column_data))
 				{
 
@@ -389,13 +399,16 @@ void DataFrame::drop_row(int k)
 					std::get<vector<string>>(columns[i].column_data).resize(row_n);
 				}
 			}
+			if(row_names){
+				for (int i = k; i < row_n; i++)
+				{	
+					ind.index_names[i] = ind.index_names[i + 1];
+				}
 
-			for (int i = k; i < row_n; i++)
-			{
-				ind.index_names[i] = ind.index_names[i + 1];
+				std::cout << "I am iron"<< std::endl;
+				ind.index_names.resize(row_n);
 			}
-
-			ind.index_names.resize(row_n);
+				
 		}
 		else
 		{
@@ -612,7 +625,7 @@ void DataFrame::mean(string col_name)
 		}
 		else
 		{
-			throw std::invalid_argument("col is not double");
+			throw std::invalid_argument("col " + col_name +" is not Numeric" );
 		}
 	}
 	catch (const std::exception &e)
