@@ -105,10 +105,8 @@ void DataFrame::sort_by_column_names()
 
 ```cpp
 template <typename T>
-concept is_eligible_Vector = std::is_same_v<vector<int>,vector<T>> || 
-std::is_same_v<vector<double>,vector<T>> ||
-std::is_same_v<vector<string>,vector<T>> ||
-std::is_same_v<vector<bool>,vector<T>>;
+concept is_eligible_Vector = std::is_same_v<vector<int>,vector<T>> || std::is_same_v<vector<double>,vector<T>> ||
+std::is_same_v<vector<string>,vector<T>> ||std::is_same_v<vector<bool>,vector<T>>;
 ```
 
 ### 5. Fold expression 
