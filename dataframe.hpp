@@ -152,40 +152,107 @@ class DataFrame{
 		 * 
 		 */
 		void drop_row(int);
-
+		/**
+		 * @brief drop the row by their column name
+		 * 
+		 */
 		void drop_row(string);
-
+		/**
+		 * @brief drop the column by column index
+		 * 
+		 */
 		void drop_column(int );
-
+		/**
+		 * @brief column by string name
+		 * 
+		 */
 		void drop_column(string );
-
+		/**
+		 * @brief Set the rownames of the dataframe by vector strings
+		 * 
+		 */
 		void set_rownames(vector<string>);
-
+		/**
+		 * @brief replace row name , takes in row name and replaces another row name
+		 * 
+		 */
 		void replace_rowname(string , string);
-
+		/**
+		 * @brief Set the colnames for a dataframe object
+		 * 
+		 */
 		void set_colnames(vector<string>);
-
+		/**
+		 * @brief  replace col name , takes in column name and replaces another column name
+		 * 
+		 */
 		void replace_colname(string ,string);
 
+		/**
+		 * @brief provides the mean for all the column objects
+		 * 
+		 */
 		void mean();
-
+		/**
+		 * @brief mean of the column name
+		 * 
+		 * @param col_name 
+		 */
 		void mean(string col_name);
-
+		/**
+		 * @brief returns the count of a certain value , takes in column name and val type
+		 * 
+		 * @tparam T 
+		 * @param col_ind 
+		 * @param val 
+		 * @return int 
+		 */
 		template<typename T>
 		int count(string col_ind ,T val );
 
-
+		/**
+		 * @brief returns the count of a certain value , takes in column index and val type 
+		 * 
+		 * @tparam T 
+		 * @param col_ind 
+		 * @param val 
+		 * @return int 
+		 */
 		template<typename T >
 		int count(int col_ind ,T val );
 
+		/**
+		 * @brief returns the count of a certain value , takes in column index and val type
+		 * 
+		 * @param col_ind 
+		 * @param val 
+		 * @return int 
+		 */
 		int count(int col_ind , string val);
-
+		/**
+		 * @brief returns the mode of all columns
+		 * 
+		 */
 		void mode();
-
+		/**
+		 * @brief returns the mode for particular column name
+		 * 
+		 * @param col_name 
+		 */
 		void mode(string col_name);
-
+		/**
+		 * @brief returns the mode for particular column index
+		 * 
+		 * @param col_pos 
+		 */
 		void mode(int col_pos);
-				
+		/**
+		 * @brief concatenation of dataframe with column vector
+		 * 
+		 * @param dataframe lhs 
+		 * @param vector rhs 
+		 * @return DataFrame object
+		 */
 		template <typename T>
 		friend DataFrame operator+(DataFrame lhs, vector<T> rhs){
     		try{
@@ -211,23 +278,68 @@ class DataFrame{
 		bool row_names;
 		bool col_names;
 		
+		/**
+		 * @brief helper function to read csv file to read and write column names to dataframe object
+		 * 
+		 * @param file  fileobject 
+		 * @param rownames bool
+		 * @return vector<string> 
+		 */
 		vector<string> read_and_write_column_names(ifstream& file , bool);
 
+		/**
+		 * @brief helper function  to initilize the column names
+		 * 
+		 * @param fileobject file 
+		 * @param  vector<string> col_names 
+		 * @param bool - row_names exists or not 
+		 */
 		void initialise_column(ifstream& file, vector<string> col_names , bool row_nam);
 
+		/**
+		 * @brief initialize the column with column name
+		 * 
+		 * @tparam T  - datatype
+		 */
 		template <typename T>
 		void initialise_column(const string& );
-
+		/**
+		 * @brief initializes the column with column type and column name
+		 * 
+		 * @param col_type 
+		 * @param col_name 
+		 */
 		void initialise_column(const string& col_type , const string& col_name);
-		
+		/**
+		 * @brief Initialize index object of dataframe with string
+		 * 
+		 */
 		void initialise_index(const string&);
-
+		/**
+		 * @brief takes in filestream object and appends the data to the columns , 
+		 * 
+		 * @param filestream object file
+		 * @param bool row_name if row_names exist
+		 */
 		void insert_data(ifstream& file ,bool row_nam);	
-
+		/**
+		 * @brief initialise the columns with defined datatype 
+		 * 
+		 * @param file 
+		 * @param row_nam  - if row_names exist
+		 */
 		void initialise_column(ifstream& file , bool row_nam);
-
+		/**
+		 * @brief helper function to initialize the column type with given type
+		 * 
+		 * @param col_type 
+		 */
 		void initialise_column(string col_type);
-
+		/**
+		 * @brief function to create column without column name
+		 * 
+		 * @tparam T 
+		 */
 		template<typename T>
 		void initialise_column(); // without column name
 
@@ -280,10 +392,23 @@ class DataFrame{
 		 */
 		template<typename T, typename... T1>
 		void append_columns(vector<T>col , vector<T1>... cols  );
-		
+		/**
+		 * @brief This function is used to check if the columnsthat are getting appended are of same size
+		 * 
+		 * @tparam  
+		 * @tparam T1 
+		 * @return true 
+		 * @return false 
+		 */
 		template <typename T , typename ...T1>
 		bool check_Index_Length(int , vector<T> , vector<T1>...);
 		
+		/**
+		 * @brief fetches the column data value ,
+		 * 
+		 * @param i 
+		 * @return col_type 
+		 */
 		col_type get_column_data(int i);
 
 		

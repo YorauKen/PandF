@@ -39,59 +39,6 @@ string::size_type width(vector<string>& inp) {
 void DataFrame::print_dataframe()
 {	
 	cout << "\n";
-	// cout << "I am before print stmt" << endl;
-	/*try
-	{
-		cout << "row size :" << row_n << " col size :" << col_n << endl;
-		for (int i = 0; i < col_n; i++)
-		{
-			// cout << "I am in for loop print stmt" << endl;
-			col_type temp = columns[i].column_data;
-			if (std::holds_alternative<vector<int>>(temp))
-			{
-				for (int j = 0; j < row_n; j++)
-				{
-					cout << std::get<vector<int>>(temp)[j] << ' ';
-				}
-				cout << endl;
-			}
-			else if (std::holds_alternative<vector<double>>(temp))
-			{
-
-				for (int j = 0; j < row_n; j++)
-				{
-					cout << (int)std::get<vector<double>>(temp)[j] << ' ';
-				}
-				cout << endl;
-			}
-			else if (std::holds_alternative<vector<string>>(temp))
-			{
-
-				for (int j = 0; j < row_n; j++)
-				{
-					cout << std::get<vector<string>>(temp)[j] << ' ';
-				}
-				cout << endl;
-			}
-			else if (std::holds_alternative<vector<bool>>(temp))
-			{
-				std::cout << std::boolalpha;
-				for (int j = 0; j < row_n; j++)
-				{
-					cout << std::get<vector<bool>>(temp)[j] << ' ';
-				}
-				cout << endl;
-			}
-			else
-			{
-				// error
-			}
-		}
-	}
-	catch (const std::exception &e)
-	{
-		std::cerr << e.what() << '\n';
-	}*/
 	cout << "row size :" << row_n << " col size :" << col_n << endl;
 	vector<string> Oggy(row_n+1);
 	if(row_names){
@@ -284,7 +231,8 @@ DataFrame DataFrame::operator[](string c)
 
 void DataFrame::sort_by_column_names()
 {
-
+	/*lamdda template function for comparison operation
+	*/
 	auto comp = []<typename T>(T a, T b)
 	{
 		return a > b;
@@ -567,16 +515,15 @@ void DataFrame::mean()
 	}
 }
 
-/*template <typename T>
-void DataFrame::countFrequency(Column<T>vec ,T& mode , int& maxF )
-{
-	int spl_count = 0;
-	for(int i = 0 ; i < vec.size() ; i++)
-	{
-		spl_count = vec[i].
-	}
-}*/
 
+
+/**
+ * @brief helper function to caluclate mean for certain columns
+ * 
+ * @tparam T 
+ * @param vec 
+ * @return double 
+ */
 template <typename T>
 double calculate_mean(const vector<T> vec)
 {
@@ -604,6 +551,13 @@ double calculate_mean(const vector<T> vec)
 	}
 }
 
+/**
+ * @brief Template full specilization function for calculating mean for double column as it may contain or 
+ * may not contain nan values
+ * @tparam  
+ * @param vec 
+ * @return double 
+ */
 template <>
 double calculate_mean(vector<double> vec)
 {

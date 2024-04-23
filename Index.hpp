@@ -15,11 +15,25 @@ class Index {
         
 		friend class DataFrame;
 		
+		/**
+		 * @brief Construct a new Index object given index column
+		 * 
+		 * @tparam T 
+		 * @param ind 
+		 */
 		template<typename T>
 		Index(vector<T> ind) : index_names(ind) {}
-		
+		/**
+		 * @brief Construct a new Index object
+		 * 
+		 */
 		Index() = default;
 
+		/**
+		 * @brief Get the index position object, takes in string and returns the position of the index value
+		 *  used in row related fuctions
+		 * @return int 
+		 */
 		int get_index_position(string);
 
     private:
