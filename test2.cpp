@@ -14,12 +14,15 @@ int  main(int argc, const char** argv) {
 		DataFrame df("ex.csv",true,true);
 		cout << "before changing the id column header to jobID " << endl;
 		df.print_dataframe();
+		
 		cout << "after changing the id column header to jobID " << endl;
 		df.replace_colname("id","jobID");
 		df.print_dataframe();
+		
 		cout << "before dropping row 1" << endl;
 		df.drop_row("1");
 		df.print_dataframe();
+		
 		cout << "after dropping row 1 and before removing column salary" << endl;
 		df.drop_column("salary");
 		df.print_dataframe();

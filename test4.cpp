@@ -20,7 +20,14 @@ int  main(int argc, const char** argv) {
 		cout << "Dataframe df  : " << endl;
 		df.print_dataframe();
 
-		
+		cout << "retrieving single column" << endl;
+		DataFrame df2 = df["first col"];
+		df2.print_dataframe();
+
+		cout << "retrieving two columns "<< endl;
+		vector<string> cols = {"first col","second col"};
+		DataFrame df3 = df[cols];
+		df3.print_dataframe();
 
 		df.mean();
 

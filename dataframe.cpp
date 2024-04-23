@@ -92,6 +92,7 @@ void DataFrame::print_dataframe()
 	{
 		std::cerr << e.what() << '\n';
 	}*/
+	cout << "row size :" << row_n << " col size :" << col_n << endl;
 	vector<string> Oggy(row_n+1);
 	if(row_names){
 		Oggy[0] = "";
@@ -162,7 +163,6 @@ void DataFrame::print_dataframe()
 	}
 
 	cout << "\n";
-	cout << "row size :" << row_n << " col size :" << col_n << endl;
 	cout << endl;
 
 
@@ -178,6 +178,10 @@ DataFrame DataFrame::operator[](vector<string> list)
 		if (if_colname_exists(list[i]))
 		{
 			df.append_column(columns[find_column_position(list[i])], list[i]);
+		}
+		if(row_names){
+			df.row_names = false;
+			df.ind.index_names = ind.index_names;
 		}
 	}
 	df.row_n = this->row_n;
@@ -255,14 +259,26 @@ DataFrame DataFrame::operator+(DataFrame &rhs)
 }
 
 DataFrame DataFrame::operator[](string c)
-{
+{	
 	DataFrame df = DataFrame();
-
-	if (if_colname_exists(c))
+	try
 	{
-		df.append_column(columns[find_column_position(c)], c);
-		df.row_n = this->row_n;
+		if (if_colname_exists(c))
+		{
+			df.append_column(columns[find_column_position(c)], c);
+			df.row_n = this->row_n;
+			df.col_names = true;
+			if(row_names){
+				df.ind.index_names = ind.index_names;
+			}
+		}
+		return df;
 	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	
 	return df;
 }
 
@@ -405,7 +421,6 @@ void DataFrame::drop_row(int k)
 					ind.index_names[i] = ind.index_names[i + 1];
 				}
 
-				std::cout << "I am iron"<< std::endl;
 				ind.index_names.resize(row_n);
 			}
 				
@@ -431,7 +446,7 @@ void DataFrame::drop_row(string j)
 			if (i != -1)
 				drop_row(i);
 			else
-				throw std::out_of_range("row names dint exist");
+				throw std::out_of_range("row names doesn't exist");
 		}
 		else
 		{

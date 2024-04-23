@@ -44,6 +44,9 @@ test4: test4.cpp $(OBJECTS)
 test5: test5.cpp $(OBJECTS)
 	@$(CXX) $(CXXFLAGS) -o $@ $^
 	@./$@
+test6: test6.cpp $(OBJECTS)
+	@$(CXX) $(CXXFLAGS) -o $@ $^
+	@./$@
 
 RMFILE = rm -f
 ifeq ($(OS),Windows_NT)
