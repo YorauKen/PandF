@@ -34,16 +34,25 @@ size_t Column::size() const {
 }
 
 void Column::push_nan(){
-    typedef std::numeric_limits<double> nan;
-
-    if (std::holds_alternative<vector<double>>(column_data))
-       push_back(nan::quiet_NaN());
-    else if (std::holds_alternative<vector<string>>(column_data))
-       push_back(string("nan"));
-    else  {
-        string msg = "Attemting to push_back NA for a bool/int type causes failure";
-        throw std::runtime_error(msg);
+    try
+    {
+         typedef std::numeric_limits<double> nan;
+        if (std::holds_alternative<vector<double>>(column_data))
+        push_back(nan::quiet_NaN());
+        else if (std::holds_alternative<vector<string>>(column_data))
+        push_back(string("nan"));
+        else  {
+            string msg = "Attemting to push_back NA for a bool/int type causes failure";
+            throw std::invalid_argument(msg);
+           
+        }
     }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+         exit(2);
+    }
+    
 }
 
 template <typename T>
